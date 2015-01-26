@@ -1,0 +1,5 @@
+#!/bin/bash
+set -ex
+echo "Starting etcd on $JUJU_UNIT_NAME"
+# don't restart if we're in the middle of initializing, this will
+#service etcd restart

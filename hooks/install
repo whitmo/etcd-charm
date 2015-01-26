@@ -1,0 +1,14 @@
+#!/bin/bash
+set -ex
+
+echo "Installing etcd on $JUJU_UNIT_NAME"
+mkdir -p /opt/etcd/bin
+mkdir -p /opt/etcd/var
+
+bzip2 -k -c -d $CHARM_DIR/files/etcd.amd64.bz2 > /opt/etcd/bin/etcd
+chmod +x-w /opt/etcd/bin/etcd
+
+cp $CHARM_DIR/files/etcd.upstart /etc/init/etcd.conf
+chmod -w /etc/init/etcd.conf
+
+open-port 4001

@@ -1,0 +1,5 @@
+#!/usr/bin/python
+import os
+from utils import svc_stop
+print("stopping etcd on %s" % os.environ['JUJU_UNIT_NAME'])
+svc_stop('etcd')

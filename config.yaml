@@ -1,0 +1,9 @@
+options:
+  debug:
+    type: boolean
+    default: true
+    description: Enable debug logging
+  snapshot:
+    type: boolean
+    default: true
+    description: Enable log snapshots

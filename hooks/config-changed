@@ -1,0 +1,7 @@
+#!/usr/bin/python
+import os
+print("Configuring etcd on %s" % os.environ['JUJU_UNIT_NAME'])
+
+from utils import write_config
+write_config()
+
