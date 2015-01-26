@@ -2,7 +2,7 @@ name: etcd
 summary: A distributed key value store for configuration and service discovery.
 description: |
   A highly-available key value store for shared configuration and service
-  discovery. etcd is inspired by Apache ZooKeeper and doozer, with a 
+  discovery. etcd is inspired by Apache ZooKeeper and doozer, with a
   focus on being:
 
    Simple: curl'able user facing API (HTTP+JSON)
@@ -10,9 +10,16 @@ description: |
    Fast: benchmarked 1000s of writes/s per instance
    Reliable: properly distributed using Raft
 
-  etcd is written in Go and uses the Raft consensus algorithm to manage 
+  etcd is written in Go and uses the Raft consensus algorithm to manage
   a highly-available replicated log.
-
+tags:
+  - coordination
+  - "service discovery"
+  - ops
+maintainers:
+  - "Whit Morriss <whit.morriss@canonical.com>"
+  - "Charles Butler <charles.butler@canonical.com>"
+  - "Matt Bruzek <matt.bruzek@canonical.com>"
 provides:
   client:
     interface: etcd
