@@ -1,44 +1,56 @@
-etcd
-====
+# Etcd
 
-A highly available configuration store in the spirit of zookeeper.
+Etcd is a highly available distributed key value store that provides a reliable
+way to store data across a cluster of machines. Etcd gracefully handles master
+elections during network partitions and will tolerate machine failure, including
+the master.
+
+Your applications can read and write data into etcd. A simple use-case is to
+store database connection details or feature flags in etcd as key value pairs.
+These values can be watched, allowing your app to reconfigure itself when they
+change.
+
+Advanced uses take advantage of the consistency guarantees to implement
+database master elections or do distributed locking across a cluster of workers.
 
 Etcd allows storing data in a distributed hierarchical database with observation.
 
-Usage
------
+## Usage
 
 We can deploy a single node easily with
 
- $ juju deploy cs:~hazmat/trusty/etcd
+    juju deploy cs:~hazmat/trusty/etcd
 
 Add and capacity with:
 
- $ juju add-unit -n 2 etcd
+    juju add-unit -n 2 etcd
 
 Its recommended to run an odd number of machines as it has greater redundancy than
 even number (ie. 4, you can lose 1 before quorum is lost, where as 5, you can 2).
 
 
 
-Health
-------
+## Health
 
 Health of the cluster can be checked by verified via juju run
 
  $ juju run --service=etcd ./health
 
 
-Charm Notes
------------
+## Known Limitations
 
-Wrt to cluster management, We can't do the natural bit in juju which
-is to update a node with its set of peers.
+During Etcd cluster management, there is a natural flow that we are uanble
+to encapsulate in juju, which is to update a node with its set of peers.
 
-Once a node has joined the cluster the state of the system is kept
+Presently, when a node has joined the cluster: the state of the system is kept
 entirely within the raft log.
 
-Credits
--------
+## Credits
 
-Original charm by @kapilt
+Original charm by [@kapilt](https://github.com/kapilt)
+
+## Upstream Project Information
+
+- [Using ETCD](https://coreos.com/using-coreos/etcd/)
+- [ETCD Getting Started Guide](https://coreos.com/docs/distributed-configuration/getting-started-with-etcd/)
+- [ETCD Issue Tracker](https://github.com/coreos/etcd)
