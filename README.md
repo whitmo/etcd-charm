@@ -34,7 +34,7 @@ even number (ie. 4, you can lose 1 before quorum is lost, where as 5, you can 2)
 
 Health of the cluster can be checked by verified via juju run
 
- $ juju run --service=etcd ./health
+    juju run --service=etcd ./health
 
 
 ## Known Limitations
@@ -52,9 +52,9 @@ The etcd charm was originally written by Kapil Thangavelu ([@kapilt](https://git
 #### Mantainers: 
 
 The kubernetes team maintains this charm:
-  - Whit Morriss <whit.morriss@canonical.com>
-  - Charles Butler <charles.butler@canonical.com>
-  - Matt Bruzek <matthew.bruzek@canonical.com>
+  - Whit Morriss &lt;whit.morriss@canonical.com&gt;
+  - Charles Butler &lt;charles.butler@canonical.com&gt;
+  - Matt Bruzek &lt;matthew.bruzek@canonical.com&gt;
 
 
 ## Upstream Project Information
