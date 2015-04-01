@@ -47,7 +47,8 @@ entirely within the raft log.
 
 ## Credits
 
-The original etcd charm was originally written by Kapil Thangavelu ([@kapilt](https://github.com/kapilt)).
+The etcd charm was originally written by Kapil Thangavelu ([@kapilt](https://github.com/kapilt)).
+
 #### Mantainers: 
 
 The kubernetes team maintains this charm:
