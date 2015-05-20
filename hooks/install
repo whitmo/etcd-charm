@@ -1,12 +1,30 @@
 #!/bin/bash
 set -ex
 
+apt-get install -y python-pip
+pip install charmhelpers
+
 echo "Installing etcd on $JUJU_UNIT_NAME"
 mkdir -p /opt/etcd/bin
 mkdir -p /opt/etcd/var
 
-bzip2 -k -c -d $CHARM_DIR/files/etcd.amd64.bz2 > /opt/etcd/bin/etcd
-chmod +x-w /opt/etcd/bin/etcd
+# bzip2 -k -c -d $CHARM_DIR/files/etcd.amd64.bz2 > /opt/etcd/bin/etcd
+# chmod +x-w /opt/etcd/bin/etcd
+
+# Immutable deployment - TODO: move to config-changed and make configurable
+wget -O /tmp/etcd.amd64.tar.gz https://github.com/coreos/etcd/releases/download/v2.0.11/etcd-v2.0.11-linux-amd64.tar.gz
+ETCD_SUM=$(sha1sum /tmp/etcd.amd64.tar.gz | cut -d " " -f1)
+if [[ "${ETCD_SUM}" != "ff3801044edbe481a5986ca8b38575f2f454c37b" ]]; then
+    echo "Unable to validate ETCD Payload"
+    return 1
+fi
+
+cd /tmp
+mkdir -p etcd
+tar xvfz etcd.amd64.tar.gz -C /opt/etcd --strip-components=1
+
+ln -s /opt/etcd/etcd /opt/etcd/bin/etcd
+ln -s /opt/etcd/etcdctl /opt/etcd/bin/etcdctl
 
 cp $CHARM_DIR/files/etcd.upstart /etc/init/etcd.conf
 chmod -w /etc/init/etcd.conf
