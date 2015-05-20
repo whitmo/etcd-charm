@@ -23,10 +23,9 @@ cd /tmp
 mkdir -p etcd
 tar xvfz etcd.amd64.tar.gz -C /opt/etcd --strip-components=1
 
-ln -s /opt/etcd/etcd /opt/etcd/bin/etcd
-ln -s /opt/etcd/etcdctl /opt/etcd/bin/etcdctl
-
-cp $CHARM_DIR/files/etcd.upstart /etc/init/etcd.conf
-chmod -w /etc/init/etcd.conf
+if [ ! -f /opt/etcd/etcd ]; then
+    ln -s /opt/etcd/etcd /opt/etcd/bin/etcd
+    ln -s /opt/etcd/etcdctl /opt/etcd/bin/etcdctl
+fi
 
 open-port 4001
