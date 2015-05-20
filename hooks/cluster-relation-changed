@@ -1,7 +1,81 @@
-#!/usr/bin/python
-import os
-print("Configuring peer %s on %s" % (
-    os.environ['JUJU_REMOTE_UNIT'], os.environ['JUJU_UNIT_NAME']))
+#!/usr/bin/env python
+from charmhelpers.core import hookenv
+from charmhelpers.core import unitdata
+from charmhelpers.core import templating
+from os import environ
+import string
+import random
+from subprocess import check_output
+import sys
 
-from utils import update_peers
-update_peers()
+print("Configuring peer %s on %s" % (
+    environ['JUJU_REMOTE_UNIT'], environ['JUJU_UNIT_NAME']))
+
+hooks = hookenv.Hooks()
+hook_data = unitdata.HookData()
+db = unitdata.kv()
+
+leader_status = check_output(['is-leader'])
+print(leader_status)
+
+
+@hooks.hook('cluster-relation-joined')
+def cluster_relation_changed():
+
+    # A token is only generated once on a cluster. Consume/send this on the wire
+    # when required
+    token = hookenv.relation_get('token')
+    if not token:
+        token = cluster_token()
+
+    private_address = hookenv.unit_get('private-address')
+    public_address = hookenv.unit_get('private-address')
+    cluster_data = {}
+    # Grab the boilerplate config entries
+    cluster_data['unit_name'] = environ['JUJU_UNIT_NAME'].replace('/', '')
+    cluster_data['private_address'] = private_address
+    cluster_data['public_address'] = public_address
+    cluster_data['token'] = token
+
+
+
+    # introspect the cluster, and form the cluster string.
+    cluster = ""
+    reldata = hook_data.rels['cluster'][1]['cluster:0']
+    for unit in reldata:
+        cluster = '{}{}=http://{}:7001,'.format(cluster,
+                                               unit.replace('/', ''),
+                                               reldata[unit]['private-address'])
+    cluster_data['cluster'] = cluster.rstrip(',')
+
+
+
+    # Useful when doing runtime based configuration. (units added after cluster
+    # bootstrap) see docs:
+    # https://github.com/coreos/etcd/blob/master/Documentation/runtime-configuration.md
+    if leader_status:
+        token = cluster_token()
+        hookenv.relation_set(hookenv.relation_id(),
+                {'leader-address': private_address,
+                 'cluster-state': 'existing',
+                 'cluster-token': token})
+
+    templating.render('etcd.conf.jinja2', '/etc/init/etcd.conf',
+                      cluster_data, owner='root', group='root')
+
+
+
+def cluster_token():
+    if not db.get('cluster-token'):
+        token = id_generator()
+        db.set('cluster-token', token)
+        return token
+    return db.get('cluster-token')
+
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+if __name__ == '__main__':
+    with hook_data():
+        hooks.execute(sys.argv)
