@@ -8,46 +8,26 @@ import random
 from subprocess import check_output
 import sys
 
-print("Configuring peer %s on %s" % (
-    environ['JUJU_REMOTE_UNIT'], environ['JUJU_UNIT_NAME']))
-
 hooks = hookenv.Hooks()
 hook_data = unitdata.HookData()
 db = unitdata.kv()
 
 leader_status = check_output(['is-leader'])
-print(leader_status)
+private_address = hookenv.unit_get('private-address')
+public_address = hookenv.unit_get('private-address')
+
+@hooks.hook('config-changed')
+def config_changed():
+    main()
 
 
 @hooks.hook('cluster-relation-joined')
 def cluster_relation_changed():
-
     # A token is only generated once on a cluster. Consume/send this on the wire
     # when required
     token = hookenv.relation_get('token')
     if not token:
         token = cluster_token()
-
-    private_address = hookenv.unit_get('private-address')
-    public_address = hookenv.unit_get('private-address')
-    cluster_data = {}
-    # Grab the boilerplate config entries
-    cluster_data['unit_name'] = environ['JUJU_UNIT_NAME'].replace('/', '')
-    cluster_data['private_address'] = private_address
-    cluster_data['public_address'] = public_address
-    cluster_data['token'] = token
-
-
-
-    # introspect the cluster, and form the cluster string.
-    cluster = ""
-    reldata = hook_data.rels['cluster'][1]['cluster:0']
-    for unit in reldata:
-        cluster = '{}{}=http://{}:7001,'.format(cluster,
-                                               unit.replace('/', ''),
-                                               reldata[unit]['private-address'])
-    cluster_data['cluster'] = cluster.rstrip(',')
-
 
 
     # Useful when doing runtime based configuration. (units added after cluster
@@ -60,8 +40,34 @@ def cluster_relation_changed():
                  'cluster-state': 'existing',
                  'cluster-token': token})
 
+    main({'token': token})
+
+def main(cluster_data={}):
+    if 'token' not in cluster_data.keys():
+        cluster_data['token'] = cluster_token()
+    # Grab the boilerplate config entries
+    cluster_data['unit_name'] = environ['JUJU_UNIT_NAME'].replace('/', '')
+    cluster_data['private_address'] = private_address
+    cluster_data['public_address'] = public_address
+
+
+
+    # introspect the cluster, and form the cluster string.
+    cluster = ""
+    if hook_data.rels['cluster'][1]:
+        reldata = hook_data.rels['cluster'][1]['cluster:0']
+        for unit in reldata:
+            cluster = '{}{}=http://{}:7001,'.format(cluster,
+                                                    unit.replace('/', ''),
+                                                    reldata[unit]['private-address'])
+        cluster_data['cluster'] = cluster.rstrip(',')
+    else:
+        cluster_data['cluster'] = "{}=http://{}:7001".format(cluster_data['unit_name'], private_address)
+
+
     templating.render('etcd.conf.jinja2', '/etc/init/etcd.conf',
                       cluster_data, owner='root', group='root')
+
 
 
 
