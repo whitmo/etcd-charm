@@ -71,11 +71,13 @@ def main(cluster_data={}):
         leader_address = hookenv.relation_get('leader-address')
 
         # do self registration
-        cmd = "/opt/etcd/etcdctl -C http://{}:4001 member add {}" \
-              " http://{}:7001".format(leader_address,
-                                       cluster_data['unit_name'],
-                                       private_address)
-        check_call(shlex.split(cmd))
+        if not db.get('registered'):
+            cmd = "/opt/etcd/etcdctl -C http://{}:4001 member add {}" \
+                  " http://{}:7001".format(leader_address,
+                                           cluster_data['unit_name'],
+                                           private_address)
+            check_call(shlex.split(cmd))
+            db.set('registered', True)
 
 
 
