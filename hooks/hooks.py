@@ -80,6 +80,7 @@ def main(cluster_data={}):
                   " http://{}:7001".format(leader_address,
                                            cluster_data['unit_name'],
                                            private_address)
+            print(cmd)
             check_call(shlex.split(cmd))
             db.set('registered', True)
 
