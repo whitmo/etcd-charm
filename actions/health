@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PRIVATE_ADDRESS=$('unit-get private-address')
+
+/opt/etcd/etcdctl cluster-health -C http://${PRIVATE_ADDRESS}:4001
