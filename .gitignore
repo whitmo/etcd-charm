@@ -1,2 +1,5 @@
 *~
 .bzr
+/.unit-state.db
+/fetched/
+/src/
