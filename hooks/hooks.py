@@ -135,9 +135,10 @@ def install_etcd():
         d = path(d)
         for f in d.files():
             f.copy(etcd_dir)
-    for f in etcd_dir.files():
-        if f == '/opt/etcd/etcd' or f == '/opt/etcd/etcdctl':
-            f.symlink('/usr/local/bin/{}'.format(f))
+
+    for executable in "etcd", "etcdctl":
+        origin = etcd_dir / executable
+        origin.symlink('/usr/local/bin/%s' % executable)
 
     hookenv.open_port(4001)
     db.set('installed', True)
