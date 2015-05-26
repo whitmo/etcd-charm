@@ -1,9 +1,19 @@
 options:
+  source:
+    type: string
+    default: https://github.com/coreos/etcd/releases/download/v2.0.11/etcd-v2.0.11-linux-amd64.tar.gz
+    description: Location of etcd binary release to fetch
+  source-sum:
+    type: string
+    default: ff3801044edbe481a5986ca8b38575f2f454c37b
+    description: SHA1 Sum of etcd binary release
   debug:
     type: boolean
     default: true
-    description: Enable debug logging
+    description: |
+        *DEPRECIATED* Enable debug logging
   snapshot:
     type: boolean
     default: true
-    description: Enable log snapshots
+    description: |
+        *DEPRECIATED* Enable log snapshots

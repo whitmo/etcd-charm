@@ -37,14 +37,6 @@ Health of the cluster can be checked by verified via juju run
     juju run --service=etcd ./health
 
 
-## Known Limitations
-
-During Etcd cluster management, there is a natural flow that we are uanble
-to encapsulate in juju, which is to update a node with its set of peers.
-
-Presently, when a node has joined the cluster: the state of the system is kept
-entirely within the raft log.
-
 ## Credits
 
 The etcd charm was originally written by Kapil Thangavelu ([@kapilt](https://github.com/kapilt)).
