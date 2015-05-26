@@ -1,3 +1,0 @@
-reset: false
-setup: echo "hi"
-tests: "[1-9]*"
