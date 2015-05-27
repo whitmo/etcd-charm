@@ -1,7 +1,1 @@
-#!/usr/bin/python
-import os
-print("Configuring peer %s on %s" % (
-    os.environ['JUJU_REMOTE_UNIT'], os.environ['JUJU_UNIT_NAME']))
-
-from utils import update_peers
-update_peers()
+hooks.py

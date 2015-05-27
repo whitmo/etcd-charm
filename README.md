@@ -32,18 +32,12 @@ even number (ie. 4, you can lose 1 before quorum is lost, where as 5, you can 2)
 
 ## Health
 
-Health of the cluster can be checked by verified via juju run
+Health of the cluster can be checked by verified via juju actions
 
-    juju run --service=etcd ./health
+    juju action do etcd/0 health
+    <return response uuid>
+    juju action fetch <uuid>
 
-
-## Known Limitations
-
-During Etcd cluster management, there is a natural flow that we are uanble
-to encapsulate in juju, which is to update a node with its set of peers.
-
-Presently, when a node has joined the cluster: the state of the system is kept
-entirely within the raft log.
 
 ## Credits
 
