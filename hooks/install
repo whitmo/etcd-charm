@@ -2,6 +2,8 @@
 set -ex
 
 apt-get install -y python-pip
+easy_install -U pip
+pip install --upgrade requests
 pip install charmhelpers path.py
 
 echo "Creating etcd data path on $JUJU_UNIT_NAME"

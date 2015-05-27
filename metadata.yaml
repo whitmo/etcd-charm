@@ -10,8 +10,9 @@ description: |
    Fast: benchmarked 1000s of writes/s per instance
    Reliable: properly distributed using Raft
 
-  etcd is written in Go and uses the Raft consensus algorithm to manage
-  a highly-available replicated log.
+  etcd is written in Go and uses the Raft consensus algorithm to
+  manage a highly-available replicated log.
+
 tags:
   - coordination
   - "service discovery"

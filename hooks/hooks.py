@@ -80,6 +80,7 @@ def main(cluster_data={}):
                   " http://{}:7001".format(leader_address,
                                            cluster_data['unit_name'],
                                            private_address)
+            print(cmd)
             check_call(shlex.split(cmd))
             db.set('registered', True)
 
@@ -135,9 +136,12 @@ def install_etcd():
         d = path(d)
         for f in d.files():
             f.copy(etcd_dir)
-    for f in etcd_dir.files():
-        if f == '/opt/etcd/etcd' or f == '/opt/etcd/etcdctl':
-            f.symlink('/usr/local/bin/{}'.format(f.basename()))
+
+    for executable in "etcd", "etcdctl":
+        origin = etcd_dir / executable
+        target = path('/usr/local/bin/%s' % executable)
+        target.exists() and target.remove()
+        origin.symlink()
 
     hookenv.open_port(4001)
     db.set('installed', True)
