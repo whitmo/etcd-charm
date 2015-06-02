@@ -1,17 +1,11 @@
 #!/bin/bash
 set -ex
 
-<<<<<<< Updated upstream
-apt-get install -y python-pip
-easy_install -U pip
-pip install --upgrade requests
-=======
 # Commenting out until http://bit.ly/1cvUejA and http://pad.lv/1306991 are
 # corrected and easy_install is no longer required to make pip function.
 # apt-get install -y python-pip
-easy_isntall -U pip
->>>>>>> Stashed changes
-pip install charmhelpers path.py
+easy_install -U pip
+pip install charmhelpers path.py requests
 
 echo "Creating etcd data path on $JUJU_UNIT_NAME"
 mkdir -p /opt/etcd/var
