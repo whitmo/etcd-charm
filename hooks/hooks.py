@@ -62,6 +62,12 @@ def cluster_relation_changed():
     main(cluster_data)
 
 
+@hooks.hook('proxy-relation-changed')
+def proxy_relation_changed():
+    hookenv.relation_set(hookenv.relation_id(),
+                         {'cluster': cluster_string()})
+
+
 def main(cluster_data={}):
 
     # Grab the boilerplate config entries

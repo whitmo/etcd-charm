@@ -24,6 +24,8 @@ maintainers:
 provides:
   client:
     interface: etcd
+  proxy:
+    interface: etcd-proxy
 peers:
   cluster:
     interface: etcd-raft
