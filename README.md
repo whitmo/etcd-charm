@@ -29,6 +29,18 @@ Its recommended to run an odd number of machines as it has greater redundancy th
 even number (ie. 4, you can lose 1 before quorum is lost, where as 5, you can 2).
 
 
+### Advanced Usage
+
+This charm also supports a `proxy` relation, when using the ETCD cluster as a
+discovery service for your own applications. Reference the
+[upstream documentation](https://github.com/coreos/etcd/blob/master/Documentation/proxy.md)
+to learn more about this feature of ETCD
+
+    juju add-relation <service>:<relation> etcd:proxy
+
+
+For each node in the cluster, you will receive a cluster-string that you can
+use to point your application into the cluster and join the gossip.
 
 ## Health
 
