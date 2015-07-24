@@ -130,7 +130,7 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 
 
 def install_etcd():
-    source = hookenv.config('source')
+    source = hookenv.config('bin-source')
     sha = hookenv.config('source-sum')
 
     unpack = fetch.install_remote(source, 'fetched', sha)
