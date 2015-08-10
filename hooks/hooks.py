@@ -16,18 +16,20 @@ hooks = hookenv.Hooks()
 hook_data = unitdata.HookData()
 db = unitdata.kv()
 
-leader_status = check_output(['is-leader']).rstrip() != "False"
 private_address = hookenv.unit_get('private-address')
 public_address = hookenv.unit_get('private-address')
 unit_name = environ['JUJU_UNIT_NAME'].replace('/', '')
 
+try:
+    leader_status = hookenv.is_leader()
+except NotImplementedError:
+    hookenv.log('This charm requires Juju 1.22.0 or greater. Panic and exit!'
+                'CRITICAL')
+    sys.exit(1)
+
 
 @hooks.hook('config-changed')
 def config_changed():
-    if not isleader_available:
-        hookenv.log('This charm requires Juju 1.22.0 or greater. Panic and exit!'
-                     'CRITICAL')
-        sys.exit(1)
     if not db.get('installed') or hookenv.config().changed('source-sum'):
         install_etcd()
     if leader_status:
@@ -155,23 +157,6 @@ def install_etcd():
 
     hookenv.open_port(4001)
     db.set('installed', True)
-
-def isleader_available():
-    """Attempt to locate is_leader
-
-    predicate method to determine if we are on a Juju revision that maintains
-    the leader election codebase.
-    """
-    cmd = ['which', 'is_leader']
-    try:
-        ret = subprocess.call(cmd, universal_newlines=True)
-        if ret == 0:
-            return True
-        else:
-            return False
-    except OSError as e:
-        # If we aren't finding the which command, we have bigger issues.
-            raise
 
 if __name__ == '__main__':
     with hook_data():
