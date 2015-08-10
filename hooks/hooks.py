@@ -16,10 +16,17 @@ hooks = hookenv.Hooks()
 hook_data = unitdata.HookData()
 db = unitdata.kv()
 
-leader_status = check_output(['is-leader']).rstrip() != "False"
 private_address = hookenv.unit_get('private-address')
 public_address = hookenv.unit_get('private-address')
 unit_name = environ['JUJU_UNIT_NAME'].replace('/', '')
+
+try:
+    leader_status = hookenv.is_leader()
+except NotImplementedError:
+    hookenv.log('This charm requires Leader Election. Juju >= 1.23.2.'
+                ' Leader election binary not found, Panic and exit!',
+                'CRITICAL')
+    sys.exit(1)
 
 
 @hooks.hook('config-changed')
