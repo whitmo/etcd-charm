@@ -51,9 +51,16 @@ Health of the cluster can be checked by verified via juju actions
     juju action fetch <uuid>
 
 
+## Usage Caveats
+
+This charm requires Leader Election, which is a feature of Juju >= 1.23.2. The
+charm will panic and refuse to continue if the leader_election binary is not
+found. Please take care when deploying this charm on older versions of Juju.
+
 ## Credits
 
 The etcd charm was originally written by Kapil Thangavelu ([@kapilt](https://github.com/kapilt)).
+
 
 #### Mantainers: 
 
