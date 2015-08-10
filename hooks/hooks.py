@@ -8,6 +8,7 @@ from os import environ
 from path import path
 import string
 import random
+import semver
 import shlex
 from subprocess import check_output, check_call
 import sys
@@ -24,6 +25,10 @@ unit_name = environ['JUJU_UNIT_NAME'].replace('/', '')
 
 @hooks.hook('config-changed')
 def config_changed():
+    if not version_check:
+        hookenv.log('This charm requires juju 1.22.0 or greater. Panic and exit!'
+                     'CRITICAL')
+        sys.exit(1)
     if not db.get('installed') or hookenv.config().changed('source-sum'):
         install_etcd()
     if leader_status:
@@ -151,6 +156,10 @@ def install_etcd():
 
     hookenv.open_port(4001)
     db.set('installed', True)
+
+def version_check():
+    version = check_output(["juju", "--version"])
+    return semver.match(version, ">=1.22.0")
 
 if __name__ == '__main__':
     with hook_data():
