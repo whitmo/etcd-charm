@@ -5,7 +5,7 @@ set -ex
 # corrected and easy_install is no longer required to make pip function.
 # apt-get install -y python-pip
 easy_install -U pip
-pip install charmhelpers path.py requests semver
+pip install charmhelpers path.py requests
 
 echo "Creating etcd data path on $JUJU_UNIT_NAME"
 mkdir -p /opt/etcd/var
