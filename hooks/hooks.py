@@ -23,7 +23,8 @@ unit_name = environ['JUJU_UNIT_NAME'].replace('/', '')
 try:
     leader_status = hookenv.is_leader()
 except NotImplementedError:
-    hookenv.log('This charm requires Juju 1.22.0 or greater. Panic and exit!'
+    hookenv.log('This charm requires Leader Election. Juju >= 1.23.2.'
+                ' Leader election binary not found, Panic and exit!',
                 'CRITICAL')
     sys.exit(1)
 
